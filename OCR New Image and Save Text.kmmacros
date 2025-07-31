@@ -14,71 +14,102 @@
 				<array>
 					<dict>
 						<key>ActionUID</key>
-						<integer>13613448</integer>
-						<key>Attribute</key>
-						<string>Parent</string>
+						<integer>13613845</integer>
+						<key>Conditions</key>
+						<dict>
+							<key>ConditionList</key>
+							<array>
+								<dict>
+									<key>ConditionType</key>
+									<string>Text</string>
+									<key>Text</key>
+									<string>%TriggerValue%</string>
+									<key>TextConditionType</key>
+									<string>DoesNotContain</string>
+									<key>TextValue</key>
+									<string>.txt</string>
+								</dict>
+							</array>
+							<key>ConditionListMatch</key>
+							<string>Any</string>
+						</dict>
+						<key>ElseActions</key>
+						<array/>
 						<key>MacroActionType</key>
-						<string>GetFileAttribute</string>
-						<key>Path</key>
-						<string>%TriggerValue%</string>
-						<key>Variable</key>
-						<string>Local__ParentPath</string>
-					</dict>
-					<dict>
-						<key>ActionUID</key>
-						<integer>13613449</integer>
-						<key>Attribute</key>
-						<string>BaseName</string>
-						<key>MacroActionType</key>
-						<string>GetFileAttribute</string>
-						<key>Path</key>
-						<string>%TriggerValue%</string>
-						<key>Variable</key>
-						<string>Local__BaseName</string>
-					</dict>
-					<dict>
-						<key>ActionUID</key>
-						<integer>13613450</integer>
-						<key>DisplayKind</key>
-						<string>Variable</string>
-						<key>ImagePath</key>
-						<string>%TriggerValue%</string>
-						<key>ImageSource</key>
-						<string>File</string>
-						<key>Language</key>
-						<string>Languages/chi_sim</string>
-						<key>MacroActionType</key>
-						<string>OCRImage</string>
+						<string>IfThenElse</string>
+						<key>ThenActions</key>
+						<array>
+							<dict>
+								<key>ActionUID</key>
+								<integer>13613841</integer>
+								<key>Attribute</key>
+								<string>Parent</string>
+								<key>MacroActionType</key>
+								<string>GetFileAttribute</string>
+								<key>Path</key>
+								<string>%TriggerValue%</string>
+								<key>Variable</key>
+								<string>Local__ParentPath</string>
+							</dict>
+							<dict>
+								<key>ActionUID</key>
+								<integer>13613842</integer>
+								<key>Attribute</key>
+								<string>BaseName</string>
+								<key>MacroActionType</key>
+								<string>GetFileAttribute</string>
+								<key>Path</key>
+								<string>%TriggerValue%</string>
+								<key>Variable</key>
+								<string>Local__BaseName</string>
+							</dict>
+							<dict>
+								<key>ActionUID</key>
+								<integer>13613843</integer>
+								<key>DisplayKind</key>
+								<string>Variable</string>
+								<key>ImagePath</key>
+								<string>%TriggerValue%</string>
+								<key>ImageSource</key>
+								<string>File</string>
+								<key>Language</key>
+								<string>Languages/chi_sim</string>
+								<key>MacroActionType</key>
+								<string>OCRImage</string>
+								<key>TimeOutAbortsMacro</key>
+								<true/>
+								<key>Variable</key>
+								<string>Local__OCR_Result</string>
+							</dict>
+							<dict>
+								<key>ActionUID</key>
+								<integer>13613844</integer>
+								<key>Append</key>
+								<false/>
+								<key>Destination</key>
+								<string>%Variable%Local__ParentPath%/%Variable%Local__BaseName%.txt</string>
+								<key>Encoding</key>
+								<string>UTF8</string>
+								<key>Format</key>
+								<string>PlainText</string>
+								<key>Format2</key>
+								<string>PlainText</string>
+								<key>MacroActionType</key>
+								<string>WriteFile</string>
+								<key>Source</key>
+								<string>Text</string>
+								<key>Text</key>
+								<string>%Variable%Local__OCR_Result%</string>
+							</dict>
+						</array>
 						<key>TimeOutAbortsMacro</key>
 						<true/>
-						<key>Variable</key>
-						<string>Local__OCR_Result</string>
-					</dict>
-					<dict>
-						<key>ActionUID</key>
-						<integer>13613451</integer>
-						<key>Append</key>
-						<false/>
-						<key>Destination</key>
-						<string>%Variable%Local__ParentPath%/%Variable%Local__BaseName%.txt</string>
-						<key>Encoding</key>
-						<string>UTF8</string>
-						<key>Format</key>
-						<string>PlainText</string>
-						<key>Format2</key>
-						<string>PlainText</string>
-						<key>MacroActionType</key>
-						<string>WriteFile</string>
-						<key>Source</key>
-						<string>Text</string>
-						<key>Text</key>
-						<string>%Variable%Local__OCR_Result%</string>
 					</dict>
 				</array>
 				<key>CreationDate</key>
 				<real>775646211.21253502</real>
 				<key>ModificationDate</key>
-				<real>775649329.36434102</real>
+				<real>775653055.17653</real>
 				<key>Name</key>
 				<string>OCR New Image and Save Text</string>
 				<key>Triggers</key>
@@ -93,14 +124,14 @@
 							<key>Path</key>
 							<string>~/Downloads/screenshot</string>
 							<key>UID2</key>
-							<string>D1E44C53-C0E4-4CA0-9862-E7D28F7A3DD3</string>
+							<string>2BD3D91D-15F4-43DC-B717-746C5F3D4490</string>
 						</dict>
 						<key>MacroTriggerType</key>
 						<string>Folder</string>
 					</dict>
 				</array>
 				<key>UID</key>
-				<string>9D17275B-56E6-4B64-9F28-CDCECF7B045A</string>
+				<string>F469A633-F0AB-477E-BE4B-AE42B7837FFB</string>
 			</dict>
 		</array>
 		<key>Name</key>
