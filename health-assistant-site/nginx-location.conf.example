@@ -1,0 +1,9 @@
+# Merge into the existing HTTPS server for anotherdayu.com; do not replace it.
+# Example document root: /var/www/anotherdayu
+# Copy site/health-assistant to /var/www/anotherdayu/health-assistant
+location = /health-assistant { return 301 /health-assistant/; }
+location /health-assistant/ {
+    root /var/www/anotherdayu;
+    index index.html;
+    try_files $uri $uri/ =404;
+}
