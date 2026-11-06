@@ -1,0 +1,5 @@
+health.anotherdayu.com {
+    root * /srv/health-assistant
+    encode zstd gzip
+    file_server
+}

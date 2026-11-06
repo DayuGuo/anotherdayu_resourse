@@ -1,0 +1,18 @@
+"use strict";
+const $=id=>document.getElementById(id), ns="http://www.w3.org/2000/svg";
+const labels={steps:"步数",distance_m:"距离",active_zone_minutes:"活跃区间分钟",resting_hr_bpm:"静息心率",hrv_rmssd_ms:"HRV",spo2_pct:"血氧",respiratory_rate_bpm:"呼吸频率",skin_temperature_c:"皮肤温度",sleep_minutes:"睡眠分钟"};
+let data=null;
+function option(el,value,label){const o=document.createElement("option");o.value=value;o.textContent=label;el.append(o);}
+function clear(){data=null;$("snapshot").value="";for(const id of ["metric","source","rows","chart"])$(id).replaceChildren();$("metric").disabled=$("source").disabled=true;$("message").textContent="尚未加载数据。";$("meta").textContent="";}
+function entries(){return Object.entries(data.days).filter(([d,v])=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&v&&typeof v==="object").sort(([a],[b])=>a.localeCompare(b)).slice(-90);}
+function sources(){const k=$("metric").value;$("source").replaceChildren();const sources=[...new Set(entries().map(([,v])=>v[k]?.source).filter(x=>typeof x==="string"))];sources.forEach(x=>option($("source"),x,x));$("source").disabled=!sources.length;render();}
+function draw(tag,attrs,text){const e=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,String(v));if(text!==undefined)e.textContent=text;$("chart").append(e);return e;}
+function render(){const k=$("metric").value,src=$("source").value;const rows=entries().map(([date,v])=>({date,p:v[k]})).filter(x=>x.p?.source===src&&typeof x.p.value==="number"&&Number.isFinite(x.p.value));$("rows").replaceChildren();$("chart").replaceChildren();$("message").textContent=rows.length?`本地快照 · ${rows.length} 条有效记录。` : "该指标没有可显示的记录。";for(const {date,p} of rows){const tr=document.createElement("tr");for(const v of [date,p.value,p.unit||"",p.source]){const td=document.createElement("td");td.textContent=String(v);tr.append(td);}$("rows").append(tr);}if(!rows.length)return;
+const values=rows.map(x=>x.p.value),lo=Math.min(...values),hi=Math.max(...values),pad=(hi-lo)*.1||1,min=lo-pad,max=hi+pad;
+const t=rows.map(x=>Date.parse(x.date+"T12:00:00Z")),start=t[0],span=t.at(-1)-start||86400000;
+const x=i=>60+(t[i]-start)/span*610,y=v=>250-(v-min)/(max-min)*210;
+for(let i=0;i<5;i++){const v=min+(max-min)*i/4;draw("line",{x1:60,x2:670,y1:y(v),y2:y(v),stroke:"#d8ded7"});draw("text",{x:3,y:y(v)+5,"font-size":12,fill:"#59685e"},v.toFixed(1));}
+rows.forEach(({date,p},i)=>{if(i&&t[i]-t[i-1]===86400000)draw("line",{x1:x(i-1),x2:x(i),y1:y(rows[i-1].p.value),y2:y(p.value),stroke:"#286345","stroke-width":2});const c=draw("circle",{cx:x(i),cy:y(p.value),r:4,fill:"#286345"});const title=document.createElementNS(ns,"title");title.textContent=`${date}: ${p.value} ${p.unit||""}`;c.append(title);});draw("text",{x:60,y:280,"font-size":12},rows[0].date);draw("text",{x:670,y:280,"font-size":12,"text-anchor":"end"},rows.at(-1).date);
+}
+$("snapshot").addEventListener("change",async e=>{const f=e.target.files[0];clear();if(!f)return;try{if(f.size>10*1024*1024)throw Error("文件超过 10 MB。");const obj=JSON.parse(await f.text());if(obj.schema_version!==2||!obj.days||typeof obj.days!=="object"||Array.isArray(obj.days))throw Error("请选择本应用 schema_version=2 的 snapshot JSON，而不是 manifest 或状态文件。");data=obj;$("meta").textContent=`抓取时间：${String(obj.fetched_at_utc||"未知")} · 快照状态：${String(obj.status||"未知")} · 运行 ID：${String(obj.run_id||"未知")}`;for(const [k,v] of Object.entries(labels))option($("metric"),k,v);$("metric").disabled=false;sources();}catch(err){clear();$("message").textContent=err.message;}});
+$("metric").addEventListener("change",sources);$("source").addEventListener("change",render);$("clear").addEventListener("click",clear);

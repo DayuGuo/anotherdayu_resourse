@@ -1,0 +1,11 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name health.anotherdayu.com;
+    root /var/www/health-assistant;
+    index index.html;
+    location / { try_files $uri $uri/ =404; }
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy no-referrer always;
+}
+# Obtain HTTPS with Certbot after DNS resolves; Certbot updates this server block.
